@@ -1,7 +1,6 @@
 import fileUtil as util
 def main():
-    file = util.openFile()
-    lines = file.readlines()
+    lines = util.openFile()
 
     answer = 0
     for line in lines:
@@ -28,7 +27,6 @@ def main():
             answer += gameID
 
     print(answer)
-    file.close()
 
 if __name__ == "__main__":
     main()

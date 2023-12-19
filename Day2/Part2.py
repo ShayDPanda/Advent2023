@@ -1,7 +1,6 @@
 import fileUtil as util
 def main():
-    file = util.openFile()
-    lines = file.readlines()
+    lines = util.openFile()
 
     answer = 0
 
@@ -24,7 +23,6 @@ def main():
         answer += (red * green * blue)
 
     print(answer)
-    file.close()
 
 if __name__ == "__main__":
     main()

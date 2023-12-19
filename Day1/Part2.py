@@ -23,9 +23,7 @@ numbers = {
 }
 
 def main():
-    file = util.openFile()
-
-    lines = file.readlines()
+    lines = util.openFile()
 
     answer = 0
 
@@ -52,7 +50,7 @@ def main():
         answer += currentNumber
 
     print(answer)
-    file.close()
+
 
 if __name__ == "__main__":
     main()
