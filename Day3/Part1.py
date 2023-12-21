@@ -1,7 +1,7 @@
 import fileUtil as util
 
 
-def fullNumber(numArray):
+def arrayToInt(numArray):
     answer = 0
 
     for num in numArray:
@@ -70,7 +70,7 @@ def main():
                     valid = checkSymbol(valid, lines[y + 1][x])
 
                 if valid:
-                    answer += fullNumber(currentNumber)
+                    answer += arrayToInt(currentNumber)
 
                 # Clear Values
                 valid = False
@@ -78,7 +78,7 @@ def main():
 
         # End of Row
         if currentNumber and valid:
-            answer += fullNumber(currentNumber)
+            answer += arrayToInt(currentNumber)
 
     print(answer)
 
