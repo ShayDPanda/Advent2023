@@ -16,8 +16,44 @@ def getData(lines, index):
         data.append([int(thisLine[0]), int(thisLine[1]), int(thisLine[2])])
         index += 1
 
-    return data
+    sortedData = []
+    for obj in data:
+        if sortedData:
+            index = 0
+            while index < len(sortedData) and obj[0] > sortedData[index][0]:
+                index += 1
 
+            sortedData.insert(index, obj)
+        else:
+            sortedData.append(obj)
+
+    return sortedData
+
+def inRange(targetMin, targetMax, currentMin, currentMax):
+    if currentMin < targetMin < currentMax < targetMax:
+        return [currentMin, targetMin - 1],[targetMin, currentMax],[currentMax + 1, targetMax]
+
+    if targetMin < currentMin < targetMax < currentMax:
+        return [targetMin, currentMin - 1],[currentMin, targetMax],[targetMax + 1, currentMax]
+
+    if targetMin < currentMin and currentMax < targetMax:
+        return [targetMin ,currentMin - 1],[currentMin, currentMax],[currentMax + 1, targetMax]
+
+    if currentMin < targetMin and targetMax < currentMax:
+        return [currentMin, targetMin - 1],[targetMin, targetMax],[targetMax + 1, currentMax]
+
+    if currentMax < currentMin:
+        return -1
+
+    return [currentMin, currentMax]
+
+def inRange_SourceToDest(currentSet, targetSet):
+    # Dest Source Range
+    return inRange(targetSet[0], targetSet[0] + targetSet[2], currentSet[1],currentSet[1] +currentSet[2])
+
+def inRange_DestToSource(currentSet, targetSet):
+    # Dest Source Range
+    return inRange(targetSet[1], targetSet[1] + targetSet[2], currentSet[0],currentSet[0] +currentSet[2])
 
 def checkData(dataSet, currentValue):
     for info in dataSet:
@@ -49,26 +85,18 @@ def main():
     tempHumid = getData(lines, TEMP_HUMID_START)
     humidLoca = getData(lines, HUMID_LOCA_START)
 
-    finalValues = ""
-    for x in seedRange:
-        for y in range(x[0], x[1] + 1):
-            currentValue = checkData(seedSoil, y)
-            currentValue = checkData(soilFert, currentValue)
-            currentValue = checkData(fertWater, currentValue)
-            currentValue = checkData(waterLight, currentValue)
-            currentValue = checkData(lightTemp, currentValue)
-            currentValue = checkData(tempHumid, currentValue)
-            currentValue = checkData(humidLoca, currentValue)
-            if finalValues:
-                finalValues = min(currentValue, finalValues)
-            else:
-                finalValues = currentValue
+    # DEST LOCAL -> Source Humid -> Dest Humid -> Source Light
 
-    print(finalValues)
+    currentRange = []
+    answer = 0
 
-    output = open("output.txt", "w")
-    output.write(str(finalValues))
-    output.close()
+    for obj in humidLoca:
+        currentRange = inRange_DestToSource(obj, tempHumid)
+
+    print(inRange_DestToSource(humidLoca[0],tempHumid[0]))
+
+
+
 
 
 if __name__ == "__main__":

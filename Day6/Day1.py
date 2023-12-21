@@ -8,5 +8,7 @@ def main():
     distances = lines[1].split()[1:]
 
 
+
+
 if __name__ == "__main__":
     main()
