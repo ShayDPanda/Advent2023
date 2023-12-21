@@ -29,41 +29,83 @@ def getData(lines, index):
 
     return sortedData
 
+
 def inRange(targetMin, targetMax, currentMin, currentMax):
     # Smaller than object
     if currentMax < targetMin:
-        return -1
+        return []
 
     # Includes the minimum but not the max
     if currentMin < targetMin < currentMax < targetMax:
-        return [currentMin, targetMin - 1],[targetMin, currentMax],[currentMax + 1, targetMax]
+        return (
+            [currentMin, targetMin - 1],
+            [targetMin, currentMax],
+            [currentMax + 1, targetMax],
+        )
 
     # Includes the max but not the minimum
     if targetMin < currentMin < targetMax < currentMax:
-        return [targetMin, currentMin - 1],[currentMin, targetMax],[targetMax + 1, currentMax]
+        return (
+            [targetMin, currentMin - 1],
+            [currentMin, targetMax],
+            [targetMax + 1, currentMax],
+        )
 
     # Target includes all of current
     if targetMin < currentMin and currentMax < targetMax:
-        return [targetMin ,currentMin - 1],[currentMin, currentMax],[currentMax + 1, targetMax]
+        return (
+            [targetMin, currentMin - 1],
+            [currentMin, currentMax],
+            [currentMax + 1, targetMax],
+        )
 
     # Target is within current
     if currentMin < targetMin and targetMax < currentMax:
-        return [currentMin, targetMin - 1],[targetMin, targetMax],[targetMax + 1, currentMax]
+        return (
+            [currentMin, targetMin - 1],
+            [targetMin, targetMax],
+            [targetMax + 1, currentMax],
+        )
 
     return [currentMin, currentMax]
 
+
 def inRange_SourceToDest(currentSet, targetSet):
     # Dest Source Range
-    return inRange(targetSet[0], targetSet[0] + targetSet[2], currentSet[1],currentSet[1] +currentSet[2])
+    print("This Set", currentSet, end=" Size: ")
+    print(len(currentSet))
+    if len(currentSet) == 1:
+        return inRange(
+            targetSet[0], targetSet[0] + targetSet[2], currentSet[0], currentSet[1]
+        )
+    return inRange(
+        targetSet[0],
+        targetSet[0] + targetSet[2],
+        currentSet[1],
+        currentSet[1] + currentSet[2],
+    )
+
 
 def inRange_DestToSource(currentSet, targetSet):
     # Dest Source Range
-    return inRange(targetSet[1], targetSet[1] + targetSet[2], currentSet[0],currentSet[0] +currentSet[2])
+    if len(currentSet) == 1:
+        return inRange(
+            targetSet[1], targetSet[1] + targetSet[2], currentSet[0], currentSet[1]
+        )
+    return inRange(
+        targetSet[1],
+        targetSet[1] + targetSet[2],
+        currentSet[0],
+        currentSet[0] + currentSet[2],
+    )
+
 
 def checkData(dataSet, currentSet):
     for info in dataSet:
+        print("CheckData: ", currentSet, info)
         values = inRange_SourceToDest(currentSet, info)
         if values != -1:
+            print("Values:", values)
             return values
 
 
@@ -114,9 +156,9 @@ def main():
 
                             for objSeeds in tempSoilSeeds:
                                 validSeeds.append(objSeeds)
-
-
-
+                                if validSeeds:
+                                    print("Seeds: ", validSeeds)
+                                    return
 
 
 if __name__ == "__main__":
