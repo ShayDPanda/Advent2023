@@ -30,20 +30,25 @@ def getData(lines, index):
     return sortedData
 
 def inRange(targetMin, targetMax, currentMin, currentMax):
+    # Smaller than object
+    if currentMax < targetMin:
+        return -1
+
+    # Includes the minimum but not the max
     if currentMin < targetMin < currentMax < targetMax:
         return [currentMin, targetMin - 1],[targetMin, currentMax],[currentMax + 1, targetMax]
 
+    # Includes the max but not the minimum
     if targetMin < currentMin < targetMax < currentMax:
         return [targetMin, currentMin - 1],[currentMin, targetMax],[targetMax + 1, currentMax]
 
+    # Target includes all of current
     if targetMin < currentMin and currentMax < targetMax:
         return [targetMin ,currentMin - 1],[currentMin, currentMax],[currentMax + 1, targetMax]
 
+    # Target is within current
     if currentMin < targetMin and targetMax < currentMax:
         return [currentMin, targetMin - 1],[targetMin, targetMax],[targetMax + 1, currentMax]
-
-    if currentMax < currentMin:
-        return -1
 
     return [currentMin, currentMax]
 
@@ -55,12 +60,11 @@ def inRange_DestToSource(currentSet, targetSet):
     # Dest Source Range
     return inRange(targetSet[1], targetSet[1] + targetSet[2], currentSet[0],currentSet[0] +currentSet[2])
 
-def checkData(dataSet, currentValue):
+def checkData(dataSet, currentSet):
     for info in dataSet:
-        if info[1] <= currentValue <= info[1] + info[2]:
-            return info[0] + (currentValue - info[1])
-
-    return currentValue
+        values = inRange_SourceToDest(currentSet, info)
+        if values != -1:
+            return values
 
 
 def main():
@@ -87,13 +91,29 @@ def main():
 
     # DEST LOCAL -> Source Humid -> Dest Humid -> Source Light
 
-    currentRange = []
+    validSeeds = []
     answer = 0
 
-    for obj in humidLoca:
-        currentRange = inRange_DestToSource(obj, tempHumid)
+    for objHL in humidLoca:
+        humidLocaRange = checkData(tempHumid, objHL)
 
-    print(inRange_DestToSource(humidLoca[0],tempHumid[0]))
+        for objLT in humidLocaRange:
+            tempHumidRange = checkData(lightTemp, objLT)
+
+            for objHR in tempHumidRange:
+                tempWaterLight = checkData(waterLight, objHR)
+
+                for objWL in tempWaterLight:
+                    tempFertWater = checkData(fertWater, objWL)
+
+                    for objFW in tempFertWater:
+                        tempSoilFert = checkData(soilFert, objFW)
+
+                        for objSS in tempSoilFert:
+                            tempSoilSeeds = checkData(seedSoil, objSS)
+
+                            for objSeeds in tempSoilSeeds:
+                                validSeeds.append(objSeeds)
 
 
 
