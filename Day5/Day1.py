@@ -64,8 +64,6 @@ def main():
         currentValue = checkData(humidLoca, currentValue)
         finalValues.append(currentValue)
 
-    print(min(finalValues))
-
 
 if __name__ == "__main__":
     main()
